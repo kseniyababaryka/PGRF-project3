@@ -1,18 +1,15 @@
-import objectdata.Cube;
-import objectdata.Jehlan;
-import objectdata.Scene;
+import objectdata.*;
 import rasterdata.RasterBI;
 import rasterops.Liner;
 import rasterops.Render3DLine;
 import rasterops.TrivialLiner;
-import transforms.Camera;
-import transforms.Mat4PerspRH;
-import transforms.Vec2D;
-import transforms.Vec3D;
+import transforms.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * trida pro kresleni na platno: zobrazeni pixelu
@@ -31,6 +28,8 @@ public class Canvas3D {
         private Render3DLine renderer3D;
         private Camera camera;
 
+
+
         private int x, y;
 
         public Canvas3D(int width, int height) {
@@ -44,8 +43,12 @@ public class Canvas3D {
             img = new RasterBI(width, height);
             liner = new TrivialLiner();
             scene = new Scene();
-            scene.add(new Cube());
-            scene.add(new Jehlan());
+            scene.add(new CoordinateAxes());
+            scene.add(new Tetrahedron());
+            scene.add(new Prism());
+            scene.add(new Curve());
+            scene.add(new Curve(true));
+            scene.add(new Curve("coons"));
             renderer3D = new Render3DLine();
             Vec3D observerPosition = new Vec3D(2, 3, -4);
             camera = new Camera()
@@ -106,6 +109,34 @@ public class Canvas3D {
                         camera = camera.addAzimuth((double) -1 / 100);
                         draw();
                     }
+
+                    if(e.getKeyCode() == KeyEvent.VK_M) {
+                        for(int i = 1; i < scene.getObjects().size(); i++){
+                            Object3D obj = scene.getObjects().get(i);
+                            Object3D transformedObj = obj.scale(1.2, 1.2, 1.2);
+
+                            scene.getObjects().remove(obj);
+                            scene.add(transformedObj);
+                            draw();
+                        }
+                    } else if(e.getKeyCode() == KeyEvent.VK_T) {
+                        for(int i = 1; i < scene.getObjects().size(); i++){
+                            Object3D obj = scene.getObjects().get(i);
+                            Object3D transformedObj = obj.translate(0.3, 0, 0);
+                            scene.add(transformedObj);
+                            scene.getObjects().remove(obj);
+                            draw();;
+                        }
+                    } else if (e.getKeyCode() == KeyEvent.VK_R) {
+                        for(int i = 1; i < scene.getObjects().size(); i++){
+                            Object3D obj = scene.getObjects().get(i);
+                            Object3D transformedObj = obj.rotate(Math.PI / 4, 0, 1, 0);
+                            scene.add(transformedObj);
+                            scene.getObjects().remove(obj);
+                            draw();
+                        }
+                    }
+
                 }
             }
             );
@@ -148,12 +179,19 @@ public class Canvas3D {
 
         public void draw() {
             clear();
+            Mat4 projectionMatrix;
+            boolean usePerspective = true; //Změnte dle potřeby
+
+            if (usePerspective) {
+                projectionMatrix = new Mat4PerspRH(Math.PI / 2, (double) img.height() / img.width(), 0.01, 100);
+            } else {
+                projectionMatrix = new Mat4OrthoRH(10.0, 10.0, 0.01, 100);  // Příklad paralelní projekce
+            }
             renderer3D.renderScene(img,
                     scene,
                     camera.getViewMatrix(),
-                    new Mat4PerspRH(Math.PI / 2, (double) img.height() / img.width(), 0.01, 100),
-                    liner,
-                    0xff0000);
+                    projectionMatrix,
+                    liner);
             panel.repaint();
         }
 
