@@ -70,7 +70,7 @@ public class Canvas {
                             .rotate(Math.PI / 100)
                             .translate(polygon.getPoint(2).getX(), polygon.getPoint(2).getY());
                 }
-                polygoner.draw(img, polygon, liner, 0xffff00);
+                polygoner.draw(img, polygon, liner, 0xff0000);
                 panel.repaint();
             }
         });
@@ -117,20 +117,6 @@ public class Canvas {
         });
 
 
-        frame.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    img.setColor(currentX + 1, currentY, 0xff0000);
-                    panel.repaint();
-                }
-                if (e.getKeyCode() == KeyEvent.VK_DOWN){
-                    img.setColor(currentX -1, currentY, 0xff0000);
-                    panel.repaint();
-                }
-            }
-        });
-
         frame.add(panel, BorderLayout.CENTER);
         frame.pack();
         frame.setVisible(true);
@@ -149,32 +135,7 @@ public class Canvas {
 
         img.present(frame.getGraphics());
 
-        img.setColor(100,100, 0xff0000);
-        currentX = 100;
-        currentY = 100;
 
-
-
-
-//        for (int i = img.getWidth()/4; i < (img.getWidth()/4)*3; i++) {
-//            for (int j = img.getHeight()/4; j < (img.getHeight()/4)*3; j++) {
-//                img.setRGB(i, j, 0x0000ff);
-//            }
-//        }
-//        int i = 0;
-//        int j = 0;
-//        while(i < img.getWidth() && j < img.getHeight()) {
-//            img.setRGB(i, j, 0x00ff00);
-//            i++;
-//            j++;
-//        }
-//        int a = 0;
-//        int b = img.getHeight();
-//        while(a < img.getWidth() && b > 0) {
-//            img.setRGB(a, b, 0x00ff00);
-//            a++;
-//            b--;
-//        }
     }
 
     public void start() {

@@ -9,11 +9,11 @@ public class Jehlan extends Object3D{
     public Jehlan(){
         super(
                 List.of(
-                        new Point3D(-1,-1,-1),
-                        new Point3D(-1, 1, -1),
-                        new Point3D(1, -1, -1),
-                        new Point3D(1, 1, -1),
-                        new Point3D(0,0, 1)
+                        new Point3D(2,-1,-1),
+                        new Point3D(2, 1, -1),
+                        new Point3D(4, -1, -1),
+                        new Point3D(4, 1, -1),
+                        new Point3D(3,0, 1)
                 ),
                 List.of(
                         0, 1,
